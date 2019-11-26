@@ -22,16 +22,17 @@
 
 \section{Introduction}
     MARIA
-    Here we should the problem of sentiment analysis as well propose the problem of sentiment analysis in wine reviews, and also discuss reasoning behind attempting to predict the score or price of a wine based off a reviewer's langauge. For example, this language extraction may be useful for marketing a new type of wine.
-
+    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our project goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews, by fitting a classification model that predict the price of the wine by looking at the review, and by training a model that predicts sentiment.
+    The classification model is useful for wineries trying to develop a pricing strategy for their different lines of product. The sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are trigerring more positive responses. Finally it could be useful for wineries developing new products when deciding what grape variety to invest on and how to market it to their customers. 
 \section{Background}
     MARIA
     Here we should spend some time talking about the background of the different algorithms that we'll use, and dicsuss the different precautions that should be taken when undertaking a problem like this one. Most of our citations should occur here.
 
 \subsection{The Dataset}
     MARIA
-    This is where we should discuss the source of data and address any concerns about the validity or contents of the Dataset
-
+    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine during November, 2017. It includes the wine name, variety, location, winery, price and review. The dataset and scrapping algorithm are published in Kaggle. 
+    Our only concern on validity comes from the fact that there are only 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is no representative of the market itself. 
+    Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. 
 \section{Exploratory Data Analysis}
     MARIA & AUSTIN
     This should be short and only include interesting things. Most of the charts that we created that aren't interesting will go in the appendix
@@ -46,7 +47,14 @@
 
 \subsection{Sentiment Analysis}
     MARIA
-    This is where we should specifcally outline our sentiment analysis efforts
+    The goal is to conduct a sentiment analysis on wine reviews. The trained model is useful for wine companies trying to predict sentiment on new or existing products by looking at the specific aspects that are generating positive/negative emotions on people.   
+    To approach this problem we will be using Natural Language Processing techniques, like Bag of Words (BoW) model and Word2Vec model to convert text into numerical representations. Then we fit the numerical representations to machine learning algorithms like Multinomial Naive Bayes, Logistic Regression and Random Forest. 
+    The first step is to convert reviews into numerical representations using count vectorizer. Then we will train a Multinomial Naive Bayes Classifier and evaluate using accuracy score, precision, recall and f1-score. 
+    INSERT ACCURACY AND CLASSIFICATION REPORT HERE.
+    Instead of using occurance counting, we can use tf-idf vectorizer to scale down the impact of frequenty appeared words in a given corpus. Then we train a Logistic Regression and evaluate using accuracy score, precision, recall and f1-score. 
+    INSERT ACCURACY AND CLASSIFICAION REPORT HERE. 
+    Here we train a Word2Vec model to create our own word vector representations using the gensim library. Then we fit the feature vectors of the reviews to a Random Forest classifier. Finally we evaluate the model using accuracy socre, precision, recall and f1-score. 
+    INSERT ACCURACY AND CLASSIFICATION REPORT HERE. 
 
 \section{Results}
     AUSTIN
