@@ -34,7 +34,7 @@
     Our only concern on validity comes from the fact that there are only 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is no representative of the market itself. 
     Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. 
 \section{Exploratory Data Analysis}
-    MARIA & AUSTIN
+    MARIA \& AUSTIN
     This should be short and only include interesting things. Most of the charts that we created that aren't interesting will go in the appendix
 
 \section{Approach}
@@ -61,8 +61,28 @@
     This is where we should start talking about the results of our studies
 
 \subsection{Modeling}
-    AUSTIN
-    This is where our modeling results should go
+    TODO add some high level comments about the results of our modeling efforts
+
+    \begin{figure}
+    \centering
+    \begin{tabular}{ |l||r|r|  }
+        \hline
+        \multicolumn{3}{|c|}{Regression Results} \\
+        \hline
+        Model& Review Score (MSE) & Wine Price (MSE) \\
+        \hline
+        $Linear BoW_{unigram}$   & 0.32451          & 0.54637 \\
+        $Linear BoW_{bigram}$    & 0.64677          & 0.80930 \\
+        $Linear BoW_{trigram}$   & 0.90052          & 0.90129 \\
+        $Linear BoW_{1-3gram}$   & 0.45988          & 0.80529 \\
+        \hline
+        $CNN$                    & 0.28459          & 0.49880 \\
+        \hline
+        $BERT$                   & \textbf{0.28287} & TBD \\
+        \hline
+    \end{tabular}
+    \caption{ Results of various regression models applied to the dataset. }
+    \end{figure}
 
 \subsection{Sentiment Analysis}
     MARIA
