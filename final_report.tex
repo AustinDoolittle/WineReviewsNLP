@@ -10,8 +10,7 @@
     Maria Corina Cabezas \\
     \texttt{m.cabezas95@berkeley.edu }
 }
-
-\date{December 2019}
+\bibliographystyle{ieeetr}
 
 \begin{document}
 \maketitle
@@ -22,17 +21,17 @@
 
 \section{Introduction}
     MARIA
-    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our project goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews, by fitting a classification model that predict the price of the wine by looking at the review, and by training a model that predicts sentiment.
-    The classification model is useful for wineries trying to develop a pricing strategy for their different lines of product. The sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are trigerring more positive responses. Finally it could be useful for wineries developing new products when deciding what grape variety to invest on and how to market it to their customers. 
+    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews. We'll train a regression model that predicts the price of the wine and the score given to the wine by the reviewer. We'll also break down the score into a classification task, creating a psuedo-sentiment analysis model. This sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are triggering more positive responses. Finally it could be useful for wineries developing new products when deciding what grape variety to invest on and how to market it to their customers. 
 \section{Background}
     MARIA
     Here we should spend some time talking about the background of the different algorithms that we'll use, and dicsuss the different precautions that should be taken when undertaking a problem like this one. Most of our citations should occur here.
 
 \subsection{The Dataset}
-    MARIA
-    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine during November, 2017. It includes the wine name, variety, location, winery, price and review. The dataset and scrapping algorithm are published in Kaggle. 
-    Our only concern on validity comes from the fact that there are only 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is no representative of the market itself. 
-    Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. 
+    MARIA \\
+    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine during November, 2017. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scrapping algorithm are published in Kaggle. 
+    Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \\
+    We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data. 
+    Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon.
 \section{Exploratory Data Analysis}
     MARIA \& AUSTIN
     This should be short and only include interesting things. Most of the charts that we created that aren't interesting will go in the appendix
@@ -47,12 +46,16 @@
     - unigram correlations were an attempt to identify high correlation between points and score, refrence https://thegradient.pub/nlps-clever-hans-moment-has-arrived/ - Maria
 
 \section{Approach}
-    AUSTIN
-    This is where we detail the approach that we take
+    As mentioned above, we set out to perform regression on the score and price of the wine, classification on the region and variety of wine, and sentiment analysis. The following outlines the approachs that we take for each of these problems.
 
-\subsection{Modeling}
-    AUSTIN
-    This is where we should specifically outline our modeling efforts
+\subsection{Regression}
+    We used three different types of models in our regression analysis. Prior to these expiriments we split the data randomly into a train, test, and validation set. The sizes of these datasets are 71973, 23991, and 23991, respectively. We preprocessed our text by removing all stop words, which in our implementation were a combination of NLTK's stopword collection, punctuation, and the top 10 most common words in the training dataset. We used Mean Squared Error as both a loss function and an evaluation metric for all models. We normalize the score of the wine by scaling the values so the mean of the distribution is 0 and standard deviation is 1. We also take the base 10 log of the price and regress on that value. \\
+    The first was the SKLearn implementation of Linear Regression with a Bag-of-Words feature vector as input. The words were tokenized via the SKLearn $CountVectorizer$, with all words being lowercased, split on spaces, and combined into ngrams of varying sizes, each of which are evaluated and shown in the results section. \\
+    The next model is a CNN model. The model was implemented in Keras \cite{keras}, an consists of an embedding layer which creates an embedding of size 256, followed by 3 parallel convolutional layers with filter sizes of 3, 4, and 5. The output of those layers are concatenated and fed as input into a fully connected layer, with dropout of probability 0.1. The output of the model is a single scalar value that does not have an activation function. The text is preprocessed and tokenized with the Keras preprocessing library. \\
+    Finally, our last model is a keras \cite{keras} implementation of BERT. The implementation was found on GitHub and is authored by CyberZHG \cite{keras_bert} Our BERT Model has 12 transformers with 4 attention heads, a fully connected layer of size 100, and an embedding layer creating word vectors of size 256. The fully connected layers also have droupout applied with probability 0.05.
+
+\subsection{Classification}
+AUSTIN
 
 \subsection{Sentiment Analysis}
     MARIA
@@ -66,11 +69,10 @@
     INSERT ACCURACY AND CLASSIFICATION REPORT HERE. 
 
 \section{Results}
-    AUSTIN
-    This is where we should start talking about the results of our studies
+    We will now disclose the results of our expiriments in Regression, Classification, and Sentiment Analysis.
 
-\subsection{Modeling}
-    TODO add some high level comments about the results of our modeling efforts
+\subsection{Regression}
+    Figure \ref{regression_results} contains a table of the Mean Squared Error achieved by all models the regression task for both wine score and log-price. The BERT model performed best on the score regression task, however the CNN was very close behind. We also not that unigram Bag-of-Words with a Linear Regressor performed best of all the linear models. We expect this to be a result of the size of the dataset. There are a large number of unique bigrams and trigrams, which likely causes overtraining. For the wine price model, we similarly see that the BERT and CNN models performed best, but in this case the CNN edged ahead of the BERT model. We see a similar pattern here in regards to the ngram size, which supports our hypothesis.
 
     \begin{figure}
     \centering
@@ -80,17 +82,18 @@
         \hline
         Model& Review Score (MSE) & Wine Price (MSE) \\
         \hline
-        $Linear BoW_{unigram}$   & 0.32451          & 0.54637 \\
-        $Linear BoW_{bigram}$    & 0.64677          & 0.80930 \\
-        $Linear BoW_{trigram}$   & 0.90052          & 0.90129 \\
-        $Linear BoW_{1-3gram}$   & 0.45988          & 0.80529 \\
+        $Linear BoW_{unigram}$   & 0.325          & 0.546 \\
+        $Linear BoW_{bigram}$    & 0.647          & 0.809 \\
+        $Linear BoW_{trigram}$   & 0.901          & 0.901 \\
+        $Linear BoW_{1-3gram}$   & 0.460          & 0.805 \\
         \hline
-        $CNN$                    & 0.28459          & \textbf{0.49880} \\
+        $CNN$                    & 0.285          & \textbf{0.499} \\
         \hline
-        $BERT$                   & \textbf{0.28287} & 0.51279 \\
+        $BERT$                   & \textbf{0.283} & 0.513 \\
         \hline
     \end{tabular}
     \caption{ Results of various regression models applied to the dataset. }
+    \label{regression_results}
     \end{figure}
 
 \subsection{Sentiment Analysis}
@@ -101,9 +104,14 @@
     BOTH
     This is where we should sum up our research in a paragraph or two
 
+\section {Sources Cited}
+
+\bibliography{final_report}
+
 \newpage
 \section{Appendix}
-    BOTH
-    This is where the remainder of our graphs and charts will be included. We should try to organize our charts and graphs by concept and link directly to them in the body of our report.
+
+\subsection{Stop Words}
+["your", "weren", "don", "having", "before", "finish", "didn", "(", "in", "does", "d", "you'll", "needn", "yourself", "what", "under", "than", ";", "\~", "any", "nor", "from", "why", "needn't", "weren't", "both", "up", "further", "during", "there", "them", "at", "wasn't", "same", "s", "<", "just", "below", "it", "again", "didn't", "aromas", "those", "haven", "ma", "now", "mustn't", "if", "itself", "him", "has", "no", "|", "which", "our", "was", "i", "such", "drink", "for", "can", "o", "over", "how", "with", "this", "my", "be", "ll", "\textbackslash", "`", "yourselves", "aren't", "once", "hadn't", "after", "you", "do", "here", "\&", "me", "where", "about", "don't", "by", "flavors", "then", "themselves", "own", "hadn", "hers", "doesn", "her", ".", "is", "?", "down", "tannins", "wouldn", "[", "of", "aren", "been", "or", "y", "few", "shouldn", "through", ":", "between", "who", "have", "mightn't", "/", "isn", "it's", "when", "he", "and", "against", "an", "herself", "ve", "=", "+", "]", "\{", "very", "a", "couldn't", "wasn", "t", "wouldn't", "\#", ")", "their", "out", "\_", "but", "because", "ain", "won", "yours", "couldn", "shouldn't", "\^", "these", "isn't", "they", "into", "myself", "were", "m", "shan", "only", "all", "his", "that'll", "had", "she's", "as", "haven't", ">", "its", "so", "cherry", "more", "too", "each", "did", "\$", "she", "ourselves", "am", "should've", "whom", "you're", "doing", "shan't", "*", "are", "the", "until", "himself", "being", "you'd", "other", "will", "mustn", "\%", "re", "that", "-", "we", "you've", "not", "acidity", "won't", "mightn", """, "ours", "doesn't", "\}", "above", "!", "some", "while", "'", "fruit", "wine", "@", "hasn", "most", "to", "on", ",", "off", "should", "hasn't", "palate", "theirs"]
 
 \end{document}
