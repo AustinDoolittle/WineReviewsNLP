@@ -1,4 +1,10 @@
-\documentclass[11pt,english]{article}
+\documentclass[11pt]{article}
+\usepackage[numbib]{tocbibind}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
 \title{
     Wine Not? \\
     \large An exploration into the language of wine reviews
@@ -33,15 +39,67 @@
     We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data. 
     Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon.
 \section{Exploratory Data Analysis}
-    MARIA \& AUSTIN
-    This should be short and only include interesting things. Most of the charts that we created that aren't interesting will go in the appendix
+    Here we outline some insights that we found in our exploration of the dataset. All graphs are visualized with the python library seaborn \cite{seaborn}, and the wordcloud was generated with the python library wordcloud \cite{wordcloud}
 
+\subsection{Vocabulary}
+    We now inspect the frequency of words in the dataset to identify any outliers, or high correlations between tokens and their labels.
+
+    \begin{figure}
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{wordcloud}
+        \caption{Word cloud of the words found in our dataset}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Unigram & Count \\
+            \hline
+            black  & 15967 \\
+            ripe   & 14979 \\
+            red    & 11949 \\
+            spice  & 10658 \\
+            notes  & 10438
+        \end{tabular}
+        \caption{ Top five unigram counts}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Bigram & Count \\
+            \hline
+            full bodied  & 3786 \\
+            cabernet sauvignon & 2931 \\
+            medium bodied & 1794 \\
+            pinot noir & 1757 \\
+            red berry & 1710
+        \end{tabular}
+        \caption{ Top five bigram counts}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.33\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Trigram & Count \\
+            \hline
+            new french oak  & 436 \\
+            red berry fruits & 381 \\
+            blend cabernet sauvignon & 322 \\
+            cabernet sauvignon merlot & 309 \\
+            merlot cabernet sauvignon & 228 
+        \end{tabular}
+        \caption{ Top five trigram counts}
+    \end{subfigure}
+    \caption{Visualization of word counts}
+    \end{figure}
     Notes from Meeting 11/26:
     - include distribution of scores and prices - Maria
         - touch on log-price, which is standard for currency based analysis
     - Include taster, region, variety graphics in disclaimer in dataset section - Maria
     - Include wordcloud and, adjacent to that, 1-3 gram counts - Austin
-    - Stop words should go in the appendix - Austin
     - taster vocab in appendix - Austin
     - unigram correlations were an attempt to identify high correlation between points and score, refrence https://thegradient.pub/nlps-clever-hans-moment-has-arrived/ - Maria
 
@@ -104,8 +162,7 @@ AUSTIN
     BOTH
     This is where we should sum up our research in a paragraph or two
 
-\section {Sources Cited}
-
+\newpage
 \bibliography{final_report}
 
 \newpage
