@@ -26,18 +26,41 @@
 \end{abstract}
 
 \section{Introduction}
-    MARIA
-    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews. We'll train a regression model that predicts the price of the wine and the score given to the wine by the reviewer. We'll also break down the score into a classification task, creating a psuedo-sentiment analysis model. This sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are triggering more positive responses. Finally it could be useful for wineries developing new products when deciding what grape variety to invest on and how to market it to their customers. 
+    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews. We'll train a regression model that predicts the price of the wine and the score given to the wine by professional reviewers. We'll also break down the score into a classification task, creating a psuedo-sentiment analysis model. This sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are triggering more positive responses. 
+
 \section{Background}
-    MARIA
-    Here we should spend some time talking about the background of the different algorithms that we'll use, and dicsuss the different precautions that should be taken when undertaking a problem like this one. Most of our citations should occur here.
+    We intend to perform experiments with a wide array of different Natural Language Processing algorithms to achieve our goal of understanding the luxury wine market via professional reviews. In order to determine which algorithms will be effective at this task, we should first identify the source and purpose of the dataset, then qualify the algorithms we intend to use with the problems that they solve.
 
 \subsection{The Dataset}
-    MARIA \\
-    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine during November, 2017. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scrapping algorithm are published in Kaggle. 
-    Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \\
+    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine in November, 2017\cite{data}. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scraping algorithm are published in Kaggle. \par
+    Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \par
     We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data. 
-    Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon.
+    Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. View Figure \ref{data_distributions} for more information regarding the distributions of different values in the dataset. \par
+
+    \begin{figure} % TODO fix graph alignment
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{taster_contribution}
+        \caption{Taster contributions plotted}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{variety_distribution}
+        \caption{Varieties with counts >1000 plotted}
+    \end{subfigure}
+    \caption{Distributions of different labels in the dataset}
+    \label{data_distributions}
+    \end{figure}
+
+    Finally, we want to ensure that 
+    
+\subsection{Regression}
+    In many cases, Linear Regression is able to solve regression problems with low error. While this is typically not the case for problems as complex as natural language processing, we will include it in our analysis to ensure we don't use too powerful of a model for our task. Linear Regression requires a feature set. For this, we can look to the age-old Bag-of-Words approach\cite{bag_of_words}. This approach is computationally simple, but only achieves that simplicity with some assumptions. Spatial relationships from the source text are not retained, thus forcing the assumption that the position of a token is not dependent on the outcome variable.\par
+    Research has also shown that CNNs are capable of learning more complex relationships within blocks of text with the advantage of maintaining spatial relationships between tokens in the text \cite{cnn}. We intend to use the 
+    
+
+
 \section{Exploratory Data Analysis}
     Here we outline some insights that we found in our exploration of the dataset. All graphs are visualized with the python library seaborn \cite{seaborn}, and the wordcloud was generated with the python library wordcloud \cite{wordcloud}
 
@@ -46,60 +69,14 @@
 
     \begin{figure}
     \centering
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{wordcloud}
-        \caption{Word cloud of the words found in our dataset}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \begin{tabular}{ lr  }
-            \hline
-            Unigram & Count \\
-            \hline
-            black  & 15967 \\
-            ripe   & 14979 \\
-            red    & 11949 \\
-            spice  & 10658 \\
-            notes  & 10438
-        \end{tabular}
-        \caption{ Top five unigram counts}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \begin{tabular}{ lr  }
-            \hline
-            Bigram & Count \\
-            \hline
-            full bodied  & 3786 \\
-            cabernet sauvignon & 2931 \\
-            medium bodied & 1794 \\
-            pinot noir & 1757 \\
-            red berry & 1710
-        \end{tabular}
-        \caption{ Top five bigram counts}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.33\textwidth}
-        \centering
-        \begin{tabular}{ lr  }
-            \hline
-            Trigram & Count \\
-            \hline
-            new french oak  & 436 \\
-            red berry fruits & 381 \\
-            blend cabernet sauvignon & 322 \\
-            cabernet sauvignon merlot & 309 \\
-            merlot cabernet sauvignon & 228 
-        \end{tabular}
-        \caption{ Top five trigram counts}
-    \end{subfigure}
-    \caption{Visualization of word counts}
+    \includegraphics[width=\textwidth]{wordcloud}
+    \caption{Word cloud of the dataset's vocabulary}
     \end{figure}
+
     Notes from Meeting 11/26:
     - include distribution of scores and prices - Maria
         - touch on log-price, which is standard for currency based analysis
     - Include taster, region, variety graphics in disclaimer in dataset section - Maria
-    - Include wordcloud and, adjacent to that, 1-3 gram counts - Austin
     - taster vocab in appendix - Austin
     - unigram correlations were an attempt to identify high correlation between points and score, refrence https://thegradient.pub/nlps-clever-hans-moment-has-arrived/ - Maria
 
@@ -107,8 +84,8 @@
     As mentioned above, we set out to perform regression on the score and price of the wine, classification on the region and variety of wine, and sentiment analysis. The following outlines the approachs that we take for each of these problems.
 
 \subsection{Regression}
-    We used three different types of models in our regression analysis. Prior to these expiriments we split the data randomly into a train, test, and validation set. The sizes of these datasets are 71973, 23991, and 23991, respectively. We preprocessed our text by removing all stop words, which in our implementation were a combination of NLTK's stopword collection, punctuation, and the top 10 most common words in the training dataset. We used Mean Squared Error as both a loss function and an evaluation metric for all models. We normalize the score of the wine by scaling the values so the mean of the distribution is 0 and standard deviation is 1. We also take the base 10 log of the price and regress on that value. \\
-    The first was the SKLearn implementation of Linear Regression with a Bag-of-Words feature vector as input. The words were tokenized via the SKLearn $CountVectorizer$, with all words being lowercased, split on spaces, and combined into ngrams of varying sizes, each of which are evaluated and shown in the results section. \\
+    We used three different types of models in our regression analysis. Prior to these expiriments we split the data randomly into a train, test, and validation set. The sizes of these datasets are 71973, 23991, and 23991, respectively. We preprocessed our text by removing all stop words, which in our implementation were a combination of NLTK's stopword collection, punctuation, and the top 10 most common words in the training dataset. We used Mean Squared Error as both a loss function and an evaluation metric for all models. We normalize the score of the wine by scaling the values so the mean of the distribution is 0 and standard deviation is 1. We also take the base 10 log of the price and regress on that value. \par
+    The first was the SKLearn implementation of Linear Regression with a Bag-of-Words feature vector as input. The words were tokenized via the SKLearn $CountVectorizer$, with all words being lowercased, split on spaces, and combined into ngrams of varying sizes, each of which are evaluated and shown in the results section. \par
     The next model is a CNN model. The model was implemented in Keras \cite{keras}, an consists of an embedding layer which creates an embedding of size 256, followed by 3 parallel convolutional layers with filter sizes of 3, 4, and 5. The output of those layers are concatenated and fed as input into a fully connected layer, with dropout of probability 0.1. The output of the model is a single scalar value that does not have an activation function. The text is preprocessed and tokenized with the Keras preprocessing library. \\
     Finally, our last model is a keras \cite{keras} implementation of BERT. The implementation was found on GitHub and is authored by CyberZHG \cite{keras_bert} Our BERT Model has 12 transformers with 4 attention heads, a fully connected layer of size 100, and an embedding layer creating word vectors of size 256. The fully connected layers also have droupout applied with probability 0.05.
 
@@ -169,6 +146,56 @@ AUSTIN
 \section{Appendix}
 
 \subsection{Stop Words}
+TODO format this as a table
 ["your", "weren", "don", "having", "before", "finish", "didn", "(", "in", "does", "d", "you'll", "needn", "yourself", "what", "under", "than", ";", "\~", "any", "nor", "from", "why", "needn't", "weren't", "both", "up", "further", "during", "there", "them", "at", "wasn't", "same", "s", "<", "just", "below", "it", "again", "didn't", "aromas", "those", "haven", "ma", "now", "mustn't", "if", "itself", "him", "has", "no", "|", "which", "our", "was", "i", "such", "drink", "for", "can", "o", "over", "how", "with", "this", "my", "be", "ll", "\textbackslash", "`", "yourselves", "aren't", "once", "hadn't", "after", "you", "do", "here", "\&", "me", "where", "about", "don't", "by", "flavors", "then", "themselves", "own", "hadn", "hers", "doesn", "her", ".", "is", "?", "down", "tannins", "wouldn", "[", "of", "aren", "been", "or", "y", "few", "shouldn", "through", ":", "between", "who", "have", "mightn't", "/", "isn", "it's", "when", "he", "and", "against", "an", "herself", "ve", "=", "+", "]", "\{", "very", "a", "couldn't", "wasn", "t", "wouldn't", "\#", ")", "their", "out", "\_", "but", "because", "ain", "won", "yours", "couldn", "shouldn't", "\^", "these", "isn't", "they", "into", "myself", "were", "m", "shan", "only", "all", "his", "that'll", "had", "she's", "as", "haven't", ">", "its", "so", "cherry", "more", "too", "each", "did", "\$", "she", "ourselves", "am", "should've", "whom", "you're", "doing", "shan't", "*", "are", "the", "until", "himself", "being", "you'd", "other", "will", "mustn", "\%", "re", "that", "-", "we", "you've", "not", "acidity", "won't", "mightn", """, "ours", "doesn't", "\}", "above", "!", "some", "while", "'", "fruit", "wine", "@", "hasn", "most", "to", "on", ",", "off", "should", "hasn't", "palate", "theirs"]
 
+
+
+\subsection{NGram Top Counts}
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Unigram & Count \\
+            \hline
+            black  & 15967 \\
+            ripe   & 14979 \\
+            red    & 11949 \\
+            spice  & 10658 \\
+            notes  & 10438
+        \end{tabular}
+        \caption{ Top five unigram counts}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Bigram & Count \\
+            \hline
+            full bodied & 3786 \\
+            cabernet sauvignon & 2931 \\
+            medium bodied & 1794 \\
+            pinot noir & 1757 \\
+            red berry & 1710
+        \end{tabular}
+        \caption{ Top five bigram counts}
+    \end{subfigure}
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \begin{tabular}{ lr  }
+            \hline
+            Trigram & Count \\
+            \hline
+            new french oak  & 436 \\
+            red berry fruits & 381 \\
+            blend cabernet sauvignon & 322 \\
+            cabernet sauvignon merlot & 309 \\
+            merlot cabernet sauvignon & 228 
+        \end{tabular}
+        \caption{ Top five trigram counts}
+    \end{subfigure}
+    \caption{1-3gram top counts}
+    \end{figure}
 \end{document}
