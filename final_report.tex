@@ -52,11 +52,36 @@
     \label{data_distributions}
     \end{figure}
 
-    Finally, we want to ensure that 
+    Research in the NLP field has also shown that some difficult benchmark datasets contain latent bias that allow more complex models to perform very well on those tasks. One example of research that identified this bias found that it was easily identifiable by observing the presence or absence of specific words in relation to their labels\cite{clever_hans}. In an attempt to identify this bias before our analysis, we conducted Pearson correlation studies on all unigrams, bigrams, and trigrams in our dataset. Figure \ref{correlations} displays the correlations between unigrams and the price and score labels. We show here that we found no significant correlation on either end of the spectrum, and also observed symmetry between positive and negative correlations of ngrams in the corpus. This soothed fears of a biased dataset in this regard, and allowed the experiments to continue without major intervention.
+    \footnote{More analysis was done in our preliminary investigation of this dataset than what is included in this section. Those results are included in the appendix for brevity} \par
+
+    \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.4\columnwidth}
+    \begin{tabular}{ |l||r| }
+        \hline
+        Unigram & $r_{price}$ \\
+        \hline
+        \hline
+    \end{tabular}
+    \caption{Correlations of unigrams with price}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.4\columnwidth}
+        \begin{tabular}{ |l||r| }
+            \hline
+            Unigram & $r_{score}$ \\
+            \hline
+            \hline
+        \end{tabular}
+        \caption{Correlations of unigrams with review score}
+        \end{subfigure}
+    \caption{Observations of correlations between Unigrams and their labels}
+    \end{figure}
+
     
 \subsection{Regression}
     In many cases, Linear Regression is able to solve regression problems with low error. While this is typically not the case for problems as complex as natural language processing, we will include it in our analysis to ensure we don't use too powerful of a model for our task. Linear Regression requires a feature set. For this, we can look to the age-old Bag-of-Words approach\cite{bag_of_words}. This approach is computationally simple, but only achieves that simplicity with some assumptions. Spatial relationships from the source text are not retained, thus forcing the assumption that the position of a token is not dependent on the outcome variable.\par
-    Research has also shown that CNNs are capable of learning more complex relationships within blocks of text with the advantage of maintaining spatial relationships between tokens in the text \cite{cnn}. We intend to use the 
+    Research has also shown that CNNs are capable of learning more complex relationships within blocks of text with the advantage of maintaining spatial relationships between tokens in the text\cite{cnn}. We intend to use a simple CNN for regression tasks, as 
     
 
 
@@ -68,7 +93,7 @@
 
     \begin{figure}
     \centering
-    \includegraphics[width=0.4\textwidth]{wordcloud}
+    \includegraphics[width=\columnwidth]{wordcloud}
     \caption{Word cloud of the dataset's vocabulary}
     \end{figure}
 
@@ -86,7 +111,7 @@
     We used three different types of models in our regression analysis. Prior to these expiriments we split the data randomly into a train, test, and validation set. The sizes of these datasets are 71973, 23991, and 23991, respectively. We preprocessed our text by removing all stop words, which in our implementation were a combination of NLTK's stopword collection, punctuation, and the top 10 most common words in the training dataset. We used Mean Squared Error as both a loss function and an evaluation metric for all models. We normalize the score of the wine by scaling the values so the mean of the distribution is 0 and standard deviation is 1. We also take the base 10 log of the price and regress on that value. \par
     The first was the SKLearn implementation of Linear Regression with a Bag-of-Words feature vector as input. The words were tokenized via the SKLearn $CountVectorizer$, with all words being lowercased, split on spaces, and combined into ngrams of varying sizes, each of which are evaluated and shown in the results section. \par
     The next model is a CNN model. The model was implemented in Keras \cite{keras}, an consists of an embedding layer which creates an embedding of size 256, followed by 3 parallel convolutional layers with filter sizes of 3, 4, and 5. The output of those layers are concatenated and fed as input into a fully connected layer, with dropout of probability 0.1. The output of the model is a single scalar value that does not have an activation function. The text is preprocessed and tokenized with the Keras preprocessing library. \\
-    Finally, our last model is a keras \cite{keras} implementation of BERT. The implementation was found on GitHub and is authored by CyberZHG \cite{keras_bert} Our BERT Model has 12 transformers with 4 attention heads, a fully connected layer of size 100, and an embedding layer creating word vectors of size 256. The fully connected layers also have droupout applied with probability 0.05.
+    Finally, our last model is a keras implementation of BERT. The implementation was found on GitHub and is authored by CyberZHG\cite{keras_bert}. Our BERT Model has 12 transformers with 4 attention heads, a fully connected layer of size 100, and an embedding layer creating word vectors of size 256. The fully connected layers also have droupout applied with probability 0.05.
 
 \subsection{Classification}
 AUSTIN
@@ -106,7 +131,7 @@ AUSTIN
     We will now disclose the results of our expiriments in Regression, Classification, and Sentiment Analysis.
 
 \subsection{Regression}
-    Figure \ref{regression_results} contains a table of the Mean Squared Error achieved by all models the regression task for both wine score and log-price. The BERT model performed best on the score regression task, however the CNN was very close behind. We also not that unigram Bag-of-Words with a Linear Regressor performed best of all the linear models. We expect this to be a result of the size of the dataset. There are a large number of unique bigrams and trigrams, which likely causes overtraining. For the wine price model, we similarly see that the BERT and CNN models performed best, but in this case the CNN edged ahead of the BERT model. We see a similar pattern here in regards to the ngram size, which supports our hypothesis.
+    Figure \ref{regression_results} contains a table of the Mean Squared Error achieved by all models the regression task for both wine score and log-price. The BERT model performed best on the score regression task, however the CNN was very close behind. We also note that unigram Bag-of-Words with a Linear Regressor performed best of all the linear models. We expect this to be a result of the size of the dataset. There are many unique bigrams and trigrams in the dataset, which likely causes overtraining. For the wine price model, we similarly see that the BERT and CNN models performed best, but in this case the CNN edged ahead of the BERT model. We see a similar pattern here in regards to the ngram size, which supports our hypothesis.
 
     \begin{figure}
     \centering
