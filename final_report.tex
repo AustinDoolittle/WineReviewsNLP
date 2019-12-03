@@ -1,22 +1,21 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{IEEEtran}
 \usepackage[numbib]{tocbibind}
+\usepackage{graphics}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{graphicx}
+\usepackage{authblk}
+
 \graphicspath{ {./images/} }
+\bibliographystyle{IEEEtran}
 
 \title{
     Wine Not? \\
     \large An exploration into the language of wine reviews
 }
-\author{
-    Austin Doolittle \\
-    \texttt{austin.doolittle@berkeley.edu}
-    \and
-    Maria Corina Cabezas \\
-    \texttt{m.cabezas95@berkeley.edu }
-}
-\bibliographystyle{ieeetr}
+\author[1]{Austin Doolittle}
+\author[1]{Maria Corina Cabezas}
+\affil[1]{University of California, Berkeley, \authorcr Email: {\tt \{austin.doolittle, m.cabezas95\}@berkeley.edu}\vspace{1.5ex}}
 
 \begin{document}
 \maketitle
@@ -32,8 +31,8 @@
     We intend to perform experiments with a wide array of different Natural Language Processing algorithms to achieve our goal of understanding the luxury wine market via professional reviews. In order to determine which algorithms will be effective at this task, we should first identify the source and purpose of the dataset, then qualify the algorithms we intend to use with the problems that they solve.
 
 \subsection{The Dataset}
-    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine in November, 2017\cite{data}. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scraping algorithm are published in Kaggle. \par
-    Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \par
+    The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine in November, 2017. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scraping algorithm are retrieved from Kaggle\cite{data}. \par
+    Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior\cite{wine_scoring}. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \par
     We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data. 
     Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. View Figure \ref{data_distributions} for more information regarding the distributions of different values in the dataset. \par
 
@@ -69,7 +68,7 @@
 
     \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{wordcloud}
+    \includegraphics[width=0.4\textwidth]{wordcloud}
     \caption{Word cloud of the dataset's vocabulary}
     \end{figure}
 
@@ -111,6 +110,7 @@ AUSTIN
 
     \begin{figure}
     \centering
+    \resizebox{\columnwidth}{!}{%
     \begin{tabular}{ |l||r|r|  }
         \hline
         \multicolumn{3}{|c|}{Regression Results} \\
@@ -126,7 +126,7 @@ AUSTIN
         \hline
         $BERT$                   & \textbf{0.283} & 0.513 \\
         \hline
-    \end{tabular}
+    \end{tabular}}
     \caption{ Results of various regression models applied to the dataset. }
     \label{regression_results}
     \end{figure}
@@ -139,6 +139,7 @@ AUSTIN
     BOTH
     This is where we should sum up our research in a paragraph or two
 
+\newpage
 \newpage
 \bibliography{final_report}
 
@@ -154,7 +155,7 @@ TODO format this as a table
 \subsection{NGram Top Counts}
 \begin{figure}
     \centering
-    \begin{subfigure}[t]{0.4\textwidth}
+    \begin{subfigure}[t]{\columnwidth}
         \centering
         \begin{tabular}{ lr  }
             \hline
@@ -168,7 +169,7 @@ TODO format this as a table
         \end{tabular}
         \caption{ Top five unigram counts}
     \end{subfigure}
-    \begin{subfigure}[t]{0.4\textwidth}
+    \begin{subfigure}[t]{\columnwidth}
         \centering
         \begin{tabular}{ lr  }
             \hline
@@ -182,7 +183,7 @@ TODO format this as a table
         \end{tabular}
         \caption{ Top five bigram counts}
     \end{subfigure}
-    \begin{subfigure}[t]{\textwidth}
+    \begin{subfigure}[t]{\columnwidth}
         \centering
         \begin{tabular}{ lr  }
             \hline
