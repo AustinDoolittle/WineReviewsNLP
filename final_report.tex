@@ -15,7 +15,10 @@
 }
 \author[1]{Austin Doolittle}
 \author[1]{Maria Corina Cabezas}
-\affil[1]{University of California, Berkeley, \authorcr Email: {\tt \{austin.doolittle, m.cabezas95\}@berkeley.edu}\vspace{1.5ex}}
+\affil[1]{
+    University of California, Berkeley
+    \authorcr{\tt \{austin.doolittle, m.cabezas95\}@berkeley.edu}\vspace{1.5ex}
+}
 
 \begin{document}
 \maketitle
@@ -25,7 +28,13 @@
 \end{abstract}
 
 \section{Introduction}
-    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews. We'll train a regression model that predicts the price of the wine and the score given to the wine by professional reviewers. We'll also break down the score into a classification task, creating a psuedo-sentiment analysis model. This sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are triggering more positive responses. 
+    Understanding user reviews is an essential part of any product branding and marketing strategy. Reviews can also provide companies with important feedback about the product and assist decision making. Our goal is to use Natural Language Processing algorithms to automate the process of analyzing wine reviews. We'll train a regression model that predicts the price of the wine and the score given to the wine by professional reviewers,then test out new descriptions of wine to identify what their percieved score would be. We'll also create a classification task, first attempting to classify the wine by region based on the language of the review, then creating a psuedo-sentiment analysis model. This sentiment analysis model is particularly useful for wine companies trying to understand their own product reviews and see what blends are triggering more positive responses. 
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\columnwidth]{wordcloud}
+        \caption{Word cloud of the WineEnthusiast dataset's vocabulary}
+    \end{figure}
 
 \section{Background}
     We intend to perform experiments with a wide array of different Natural Language Processing algorithms to achieve our goal of understanding the luxury wine market via professional reviews. In order to determine which algorithms will be effective at this task, we should first identify the source and purpose of the dataset, then qualify the algorithms we intend to use with the problems that they solve.
@@ -33,7 +42,7 @@
 \subsection{The Dataset}
     The dataset consists on 130,000 wine reviews scraped for the WineEnthusiast magazine in November, 2017. It includes the wine name, variety, name and location of the winery, price, and the review text and score. The dataset and scraping algorithm are retrieved from Kaggle\cite{data}. \par
     Official wine scoring is done on a scale from 50 to 100, with a higher score indicating that the wine is superior\cite{wine_scoring}. WineEnthusiast will not publish reviews for any wine that scores less than 80 points, so the range of possible values for this specific dataset is 80 to 100. \par
-    We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for 1/10 of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data. 
+    We should be mindful that there are 19 reviewers in our dataset, with one reviewer amounting for $\frac{1}{10}$ of all reviews. This might indicate the dataset is not representative of the market itself, and we should be mindful of this bias when drawing conclusions from the data.
     Also, the dataset is not balanced in the number of reviews per each wine variety and region, with most reviewed wines coming from the United States and being Cabernet Sauvignon. View Figure \ref{data_distributions} for more information regarding the distributions of different values in the dataset. \par
 
     \begin{figure} % TODO fix graph alignment
@@ -46,7 +55,7 @@
     \begin{subfigure}[t]{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{variety_distribution}
-        \caption{Varieties with counts >1000 plotted}
+        \caption{Varieties with counts $>$1000 plotted}
     \end{subfigure}
     \caption{Distributions of different labels in the dataset}
     \label{data_distributions}
@@ -58,51 +67,54 @@
     \begin{figure}
     \centering
     \begin{subfigure}[t]{0.4\columnwidth}
-    \begin{tabular}{ |l||r| }
+    \begin{tabular}{ |l|r| }
         \hline
         Unigram & $r_{price}$ \\
         \hline
         \hline
+        condrieu & 0.188 \\
+	    enduring & 0.178 \\ 
+	    reflects & 0.172 \\
+	    component & 0.156 \\
+	    perfectly & 0.154 \\
+        \hline
+        brusque & -0.093 \\
+        enviable & -0.094 \\
+        funky & -0.100 \\
+        hyde & -0.105 \\
+        weightless & -0.184 \\
+        \hline
     \end{tabular}
-    \caption{Correlations of unigrams with price}
     \end{subfigure}
     \begin{subfigure}[t]{0.4\columnwidth}
-        \begin{tabular}{ |l||r| }
-            \hline
-            Unigram & $r_{score}$ \\
-            \hline
-            \hline
-        \end{tabular}
-        \caption{Correlations of unigrams with review score}
-        \end{subfigure}
-    \caption{Observations of correlations between Unigrams and their labels}
+    \begin{tabular}{ |l|r| }
+        \hline
+        Unigram & $r_{score}$ \\
+        \hline
+        \hline
+        tufo & 0.149 \\
+        heartland & 0.146 \\
+        satisfying & 0.107 \\
+        grower & 0.105 \\
+        early & 0.103 \\
+        \hline
+        introductory & -0.063 \\
+        drunk & -0.064 \\
+        costs & -0.064 \\
+        ager & -0.067 \\
+        sangiovese & -0.068 \\
+        \hline
+    \end{tabular}
+    \end{subfigure}
+    \caption{Most extreme correlations between unigrams and their price and score}
+    \label{correlations}
     \end{figure}
 
     
-\subsection{Regression}
-    In many cases, Linear Regression is able to solve regression problems with low error. While this is typically not the case for problems as complex as natural language processing, we will include it in our analysis to ensure we don't use too powerful of a model for our task. Linear Regression requires a feature set. For this, we can look to the age-old Bag-of-Words approach\cite{bag_of_words}. This approach is computationally simple, but only achieves that simplicity with some assumptions. Spatial relationships from the source text are not retained, thus forcing the assumption that the position of a token is not dependent on the outcome variable.\par
-    Research has also shown that CNNs are capable of learning more complex relationships within blocks of text with the advantage of maintaining spatial relationships between tokens in the text\cite{cnn}. We intend to use a simple CNN for regression tasks, as 
-    
-
-
-\section{Exploratory Data Analysis}
-    Here we outline some insights that we found in our exploration of the dataset. All graphs are visualized with the python library seaborn \cite{seaborn}, and the wordcloud was generated with the python library wordcloud \cite{wordcloud}
-
-\subsection{Vocabulary}
-    We now inspect the frequency of words in the dataset to identify any outliers, or high correlations between tokens and their labels.
-
-    \begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{wordcloud}
-    \caption{Word cloud of the dataset's vocabulary}
-    \end{figure}
-
-    Notes from Meeting 11/26:
-    - include distribution of scores and prices - Maria
-        - touch on log-price, which is standard for currency based analysis
-    - Include taster, region, variety graphics in disclaimer in dataset section - Maria
-    - taster vocab in appendix - Austin
-    - unigram correlations were an attempt to identify high correlation between points and score, refrence https://thegradient.pub/nlps-clever-hans-moment-has-arrived/ - Maria
+\subsection{Modeling}
+    In many cases, linear models are able to solve regression problems with low error. While this is typically not the case for problems as complex as natural language processing, we will include it in our analysis to ensure we don't use too powerful of a model for our task. These linear models require some feature vector as input. Two very simple methods of feature extraction from a corpus of text data are the age-old Bag-of-Words approach\cite{bag_of_words} as well as Word2Vec embeddings \cite{word2vec}. We explore the application of both at different points within our research.\par
+    Research has also shown that CNNs are capable of learning more complex relationships within blocks of text with the advantage of maintaining spatial relationships between tokens in the text\cite{cnn}. As with linear models, this model requires some input. Because CNNs are able to learn more complex relationships, it can be advantageous to use a more specialized method for creating our featureset. Creating an embedding matrix with learnable parameters allows for this featureset to be learned as if it was an additional parameter in the model.\par
+    The absolute leader in the field of Natural Language Processing is the transformer layer. Of all implementations of this layer, the BERT model repeatedly yields state-of-the-art results in most NLP tasks\cite{bert}. We intend to use the embedding layer described above to generate learned vector embeddings for the input tokens to our use cases for BERT 
 
 \section{Approach}
     As mentioned above, we set out to perform regression on the score and price of the wine, classification on the region and variety of wine, and sentiment analysis. The following outlines the approachs that we take for each of these problems.
@@ -110,7 +122,7 @@
 \subsection{Regression}
     We used three different types of models in our regression analysis. Prior to these expiriments we split the data randomly into a train, test, and validation set. The sizes of these datasets are 71973, 23991, and 23991, respectively. We preprocessed our text by removing all stop words, which in our implementation were a combination of NLTK's stopword collection, punctuation, and the top 10 most common words in the training dataset. We used Mean Squared Error as both a loss function and an evaluation metric for all models. We normalize the score of the wine by scaling the values so the mean of the distribution is 0 and standard deviation is 1. We also take the base 10 log of the price and regress on that value. \par
     The first was the SKLearn implementation of Linear Regression with a Bag-of-Words feature vector as input. The words were tokenized via the SKLearn $CountVectorizer$, with all words being lowercased, split on spaces, and combined into ngrams of varying sizes, each of which are evaluated and shown in the results section. \par
-    The next model is a CNN model. The model was implemented in Keras \cite{keras}, an consists of an embedding layer which creates an embedding of size 256, followed by 3 parallel convolutional layers with filter sizes of 3, 4, and 5. The output of those layers are concatenated and fed as input into a fully connected layer, with dropout of probability 0.1. The output of the model is a single scalar value that does not have an activation function. The text is preprocessed and tokenized with the Keras preprocessing library. \\
+    The next model is a CNN model. The model was implemented in Keras \cite{keras}, an consists of an embedding layer which creates an embedding of size 256, followed by 3 parallel convolutional layers with filter sizes of 3, 4, and 5. The output of those layers are concatenated and fed as input into a fully connected layer, with dropout of probability 0.1. The output of the model is a single scalar value that does not have an activation function. The text is preprocessed and tokenized with the Keras preprocessing library. \par
     Finally, our last model is a keras implementation of BERT. The implementation was found on GitHub and is authored by CyberZHG\cite{keras_bert}. Our BERT Model has 12 transformers with 4 attention heads, a fully connected layer of size 100, and an embedding layer creating word vectors of size 256. The fully connected layers also have droupout applied with probability 0.05.
 
 \subsection{Classification}
@@ -155,6 +167,30 @@ AUSTIN
     \caption{ Results of various regression models applied to the dataset. }
     \label{regression_results}
     \end{figure}
+    \begin{figure}
+        \textbf{Tantalizing the taste buds, Four Loko is truly 
+        a taste sensation with few budget mixed drinks 
+        coming close to the quality of this absolute icon.}
+        \centering
+        \resizebox{\columnwidth}{!}{%
+        \begin{tabular}{ |l||r|r|  }
+            \hline
+            Model& Review Score (Points) & Wine Price (Dollars) \\
+            \hline
+            $Linear BoW_{unigram}$   & 87.3         & 25.5 \\
+            $Linear BoW_{bigram}$    & 86.9          & 18.1 \\
+            $Linear BoW_{trigram}$   & 80.9         & 13.9 \\
+            $Linear BoW_{1-3gram}$   & 85.5          & 7.5 \\
+            \hline
+            $CNN$                    & 87.5        & 12.2 \\
+            \hline
+            $BERT$                   & 86.1 & 0.513 \\
+            \hline
+        \end{tabular}}
+        \caption{ The result of applying the above text to the various models}
+        \label{regression_results}
+        \end{figure}
+\subsection{Classification}
 
 \subsection{Sentiment Analysis}
     MARIA
